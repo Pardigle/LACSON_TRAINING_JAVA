@@ -1,4 +1,4 @@
-package training;
+package Day3;
 
 public final class PayPal extends OnlinePayment {
 	private String email;

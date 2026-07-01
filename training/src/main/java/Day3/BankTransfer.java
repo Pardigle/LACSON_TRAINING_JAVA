@@ -1,4 +1,4 @@
-package training;
+package Day3;
 
 public non-sealed class BankTransfer extends OnlinePayment{
 	private int accountNumber;

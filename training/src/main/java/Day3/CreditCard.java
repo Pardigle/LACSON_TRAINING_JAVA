@@ -1,4 +1,4 @@
-package training;
+package Day3;
 
 public final class CreditCard extends OnlinePayment {
 	private int cardNumber;

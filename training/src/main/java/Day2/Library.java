@@ -1,4 +1,4 @@
-package training;
+package Day2;
 import java.util.ArrayList;
 
 public class Library {

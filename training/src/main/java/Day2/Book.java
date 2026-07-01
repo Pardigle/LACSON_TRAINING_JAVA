@@ -1,4 +1,4 @@
-package training;
+package Day2;
 
 public class Book {
 	private String title;

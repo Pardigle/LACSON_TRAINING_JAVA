@@ -1,4 +1,4 @@
-package training;
+package Day3;
 
 public sealed abstract class OnlinePayment implements PaymentMethod 
 	permits CreditCard, PayPal, BankTransfer {

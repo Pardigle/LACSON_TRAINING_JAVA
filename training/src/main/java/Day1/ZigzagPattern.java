@@ -1,4 +1,4 @@
-package training;
+package Day1;
 import java.util.Scanner;
 
 public class ZigzagPattern {
