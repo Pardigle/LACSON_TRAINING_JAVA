@@ -14,6 +14,7 @@ public class Library {
 		for (Book b : booklist) {
 			b.getInfo();
 		}
+		System.out.println();
 	}
 	
 	public void borrowBook(String title) {
