@@ -1,6 +1,6 @@
 package training;
 
-public non-sealed class PayPal extends OnlinePayment {
+public final class PayPal extends OnlinePayment {
 	private String email;
 	
 	public PayPal(double balance, String email) {

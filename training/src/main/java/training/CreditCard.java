@@ -1,6 +1,6 @@
 package training;
 
-public non-sealed class CreditCard extends OnlinePayment {
+public final class CreditCard extends OnlinePayment {
 	private int cardNumber;
 	
 	public CreditCard(double balance, int accountNumber) {
