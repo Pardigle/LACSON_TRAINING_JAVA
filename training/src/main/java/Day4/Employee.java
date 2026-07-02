@@ -25,6 +25,7 @@ public class Employee {
 	
 	@Override
 	public String toString() {
-		return name + " (" + Double.toString(salary) + ")";
+		String formattedSalary = String.format("%.10f", salary).replaceAll("\\.?0+$", "");
+		return name + " (" + formattedSalary + ")";
 	}
 }

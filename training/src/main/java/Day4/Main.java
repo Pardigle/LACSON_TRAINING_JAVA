@@ -47,10 +47,8 @@ public class Main {
 		for (Employee employee : employees) {
 			if (!departments.containsKey(employee.getDepartment()) ) {
 				departments.put(employee.getDepartment(), new ArrayList<Employee>());
-				departments.get(employee.getDepartment()).add(employee);
-			} else {
-				departments.get(employee.getDepartment()).add(employee);
 			}
+			departments.get(employee.getDepartment()).add(employee);
 		}
 		
 		System.out.println("Employee departments:");
@@ -70,10 +68,8 @@ public class Main {
 		for (Employee employee : employees) {
 			if (!departments.containsKey(employee.getDepartment()) ) {
 				departments.put(employee.getDepartment(), new ArrayList<Employee>());
-				departments.get(employee.getDepartment()).add(employee);
-			} else {
-				departments.get(employee.getDepartment()).add(employee);
 			}
+			departments.get(employee.getDepartment()).add(employee);
 		}
 		
 		System.out.println("Highest paid per department:");
@@ -90,7 +86,6 @@ public class Main {
 			}
 			if (topEmployee != null) {
 				System.out.println(topEmployee.toString());
-
 			}
 		}		
 	}
@@ -101,7 +96,7 @@ public class Main {
 		
 		System.out.println("Salaries sorted (descending):");
 		for (Employee employee : employees) {
-			System.out.println(" - " + Double.toString(employee.getSalary()));
+			System.out.println(" - " + String.format("%.10f", employee.getSalary()).replaceAll("\\.?0+$", ""));
 		}
 	}
 	
@@ -114,7 +109,7 @@ public class Main {
 		
 		System.out.println("Unique salaries:");
 		for (double salary : salaries) {
-			System.out.println(" - " + Double.toString(salary));
+			System.out.println(" - " + String.format("%.10f", salary).replaceAll("\\.?0+$", ""));
 		}
 	}
 }
