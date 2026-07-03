@@ -112,8 +112,4 @@ public class Main {
 			System.out.println(" - " + String.format("%.10f", salary).replaceAll("\\.?0+$", ""));
 		}
 	}
-	
-	
-	
-	
 }
