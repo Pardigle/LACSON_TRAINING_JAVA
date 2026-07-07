@@ -40,9 +40,13 @@ public class DatabaseConnection {
 			"DELETE FROM student "
 			+ "WHERE email = ? AND password = ?;";
 	private static String countMatchingCredentials = 
-			"SELECT COUNT(email) AS results "
+			"SELECT 1 AS results "
 			+ "FROM student "
 			+ "WHERE email = ? AND password = ?;";
+	private static String countMatchingEmail = 
+			"SELECT 1 AS results "
+			+ "FROM student "
+			+ "WHERE email = ?;";
 	
 	/**
 	 * Choose CRUD-related options iteratively
@@ -84,29 +88,37 @@ public class DatabaseConnection {
 		try {
 			Connection con = DriverManager.getConnection(jdbcUrl, username, password);
 			
-			System.out.print("First name: ");
-			String inputFirstname = scanner.nextLine();
-			
-			System.out.print("Last name: ");
-			String inputLastname = scanner.nextLine();
-			
 			System.out.print("Email: ");
 			String inputEmail = scanner.nextLine();
 			
-			System.out.print("Password: ");
-			String inputPassword = scanner.nextLine();
-					
-			PreparedStatement ps = con.prepareStatement(addStudent);
-			ps.setString(1, inputFirstname);
-			ps.setString(2, inputLastname);
-			ps.setString(3, inputEmail);
-			ps.setString(4, inputPassword);
-			int rowsAffected = ps.executeUpdate();
+			PreparedStatement checkStatement = con.prepareStatement(countMatchingEmail);
+			checkStatement.setString(1, inputEmail);
 			
-			if (rowsAffected > 0) {
-				System.out.println("Row added successfully!");
+			ResultSet matchingStudents = checkStatement.executeQuery();
+			
+			if (!matchingStudents.next()) {
+				System.out.print("Password: ");
+				String inputPassword = scanner.nextLine();
+				
+				System.out.print("First name: ");
+				String inputFirstname = scanner.nextLine();
+				
+				System.out.print("Last name: ");
+				String inputLastname = scanner.nextLine();
+				
+				PreparedStatement ps = con.prepareStatement(addStudent);
+				ps.setString(1, inputFirstname);
+				ps.setString(2, inputLastname);
+				ps.setString(3, inputEmail);
+				ps.setString(4, inputPassword);
+				int rowsAffected = ps.executeUpdate();
+				
+				if (rowsAffected > 0) {
+					System.out.println("Row added successfully!");
+				}
+			} else {
+				System.out.println("Email already taken!");
 			}
-			
 			con.close();
 		} catch (SQLException e) {
 			System.out.println("Issue with insert.");
@@ -160,31 +172,38 @@ public class DatabaseConnection {
 			System.out.print("Email: ");
 			String inputEmail = scanner.nextLine();
 			
-			System.out.print("Password: ");
-			String inputPassword = scanner.nextLine();
+			PreparedStatement checkEmailStatement = con.prepareStatement(countMatchingEmail);
+			checkEmailStatement.setString(1, inputEmail);
 			
-			PreparedStatement checkStatement = con.prepareStatement(countMatchingCredentials);
-			checkStatement.setString(1, inputEmail);
-			checkStatement.setString(2, inputPassword);
-			
-			ResultSet matchingStudents = checkStatement.executeQuery();
-			matchingStudents.next();
-			if (matchingStudents.getInt("results") > 0) {
-				System.out.print("New password: ");
-				String inputNewPassword = scanner.nextLine();
+			ResultSet matchingEmails = checkEmailStatement.executeQuery();
+			if (matchingEmails.next()) {
+				System.out.print("Password: ");
+				String inputPassword = scanner.nextLine();
 				
-				PreparedStatement ps = con.prepareStatement(updatePassword);
-				ps.setString(1, inputNewPassword);
-				ps.setString(2, inputEmail);
-				ps.setString(3, inputPassword);
+				PreparedStatement checkStatement = con.prepareStatement(countMatchingCredentials);
+				checkStatement.setString(1, inputEmail);
+				checkStatement.setString(2, inputPassword);
 				
-				int rowsAffected = ps.executeUpdate();
-				
-				if (rowsAffected > 0) {
-					System.out.println("Row/s updated successfully!");
+				ResultSet matchingCredentials = checkStatement.executeQuery();
+				if (matchingCredentials.next()) {
+					System.out.print("New password: ");
+					String inputNewPassword = scanner.nextLine();
+					
+					PreparedStatement ps = con.prepareStatement(updatePassword);
+					ps.setString(1, inputNewPassword);
+					ps.setString(2, inputEmail);
+					ps.setString(3, inputPassword);
+					
+					int rowsAffected = ps.executeUpdate();
+					
+					if (rowsAffected > 0) {
+						System.out.println("Row/s updated successfully!");
+					}
+				} else {
+					System.out.println("Invalid credentials.");
 				}
 			} else {
-				System.out.println("Invalid credentials.");
+				System.out.println("Email not found.");
 			}
 			con.close();
 		} catch (SQLException e) {
@@ -202,26 +221,34 @@ public class DatabaseConnection {
 			System.out.print("Email: ");
 			String inputEmail = scanner.nextLine();
 			
-			System.out.print("Password: ");
-			String inputPassword = scanner.nextLine();
+			PreparedStatement checkEmailStatement = con.prepareStatement(countMatchingEmail);
+			checkEmailStatement.setString(1, inputEmail);
 			
-			PreparedStatement checkStatement = con.prepareStatement(countMatchingCredentials);
-			checkStatement.setString(1, inputEmail);
-			checkStatement.setString(2, inputPassword);
+			ResultSet matchingEmails = checkEmailStatement.executeQuery();
 			
-			ResultSet matchingStudents = checkStatement.executeQuery();
-			matchingStudents.next();
-			if (matchingStudents.getInt("results") > 0) {
-				PreparedStatement ps = con.prepareStatement(deleteStudent);
-				ps.setString(1, inputEmail);
-				ps.setString(2, inputPassword);
+			if (matchingEmails.next()) {
+				System.out.print("Password: ");
+				String inputPassword = scanner.nextLine();
 				
-				int rowsAffected = ps.executeUpdate();
-				if (rowsAffected > 0) {
-					System.out.println("Row/s deleted successfully!");
+				PreparedStatement checkStatement = con.prepareStatement(countMatchingCredentials);
+				checkStatement.setString(1, inputEmail);
+				checkStatement.setString(2, inputPassword);
+				
+				ResultSet matchingCredentials = checkStatement.executeQuery();
+				if (matchingCredentials.next()) {
+					PreparedStatement ps = con.prepareStatement(deleteStudent);
+					ps.setString(1, inputEmail);
+					ps.setString(2, inputPassword);
+					
+					int rowsAffected = ps.executeUpdate();
+					if (rowsAffected > 0) {
+						System.out.println("Row/s deleted successfully!");
+					}
+				} else {
+					System.out.println("Invalid credentials.");
 				}
 			} else {
-				System.out.println("Invalid credentials.");
+				System.out.println("Email does not exist.");
 			}
 			con.close();
 		} catch (SQLException e) {
